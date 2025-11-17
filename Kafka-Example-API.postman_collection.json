@@ -1,0 +1,98 @@
+{
+  "info": {
+    "name": "Kafka Example API",
+    "_postman_id": "kafka-example-collection",
+    "description": "Collection for testing Kafka Producer/Consumer Spring Boot application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/kafka/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "kafka", "health"]
+        },
+        "description": "Check if the application is running"
+      }
+    },
+    {
+      "name": "Publish Simple Message",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Hello, Kafka!\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/kafka/publish",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "kafka", "publish"]
+        },
+        "description": "Publish a simple message to Kafka topic"
+      }
+    },
+    {
+      "name": "Publish Message with Key",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"key\": \"message-key-1\",\n  \"message\": \"Hello, Kafka with key!\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/kafka/publish-with-key",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "kafka", "publish-with-key"]
+        },
+        "description": "Publish a message with a key to Kafka topic"
+      }
+    },
+    {
+      "name": "Publish Multiple Messages (Loop)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Message number {{$randomInt}}\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/kafka/publish",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "kafka", "publish"]
+        },
+        "description": "Use Postman Runner to send multiple messages"
+      }
+    }
+  ]
+}
+

@@ -1,0 +1,142 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   ✅ ĐÃ SỬA LỖI DESERIALIZATION! ✅                      ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+🔴 LỖI BẠN VỪA GẶP:
+═══════════════════════════════════════════════════════════
+ClassNotFoundException: com.example.producer.model.Order
+RecordDeserializationException
+Consumer restart liên tục
+
+═══════════════════════════════════════════════════════════
+
+✅ ĐÃ SỬA:
+═══════════════════════════════════════════════════════════
+1. Producer Config - Tắt type headers
+2. Consumer Config - ErrorHandlingDeserializer + tắt type headers
+3. Tạo script reset-kafka.bat
+4. Tạo hướng dẫn chi tiết
+
+═══════════════════════════════════════════════════════════
+
+🚀 BÂY GIỜ LÀM GÌ? (4 BƯỚC)
+═══════════════════════════════════════════════════════════
+
+BƯỚC 1: Reset Kafka (XÓA MESSAGES CŨ)
+───────────────────────────────────────────────────────────
+cd E:\StudyDoc\NAM3\PTUDDN\KafkaExample
+reset-kafka.bat
+
+Hoặc thủ công:
+  docker-compose -f docker-compose-cluster.yml down -v
+  docker-compose -f docker-compose-cluster.yml up -d
+
+Chờ 60 giây!
+
+BƯỚC 2: REBUILD Consumer (Terminal 1)
+───────────────────────────────────────────────────────────
+cd E:\StudyDoc\NAM3\PTUDDN\KafkaExample\consumer-service
+mvn clean install -DskipTests
+mvn spring-boot:run
+
+Chờ thấy: "Started ConsumerServiceApplication"
+
+BƯỚC 3: REBUILD Producer (Terminal 2)
+───────────────────────────────────────────────────────────
+cd E:\StudyDoc\NAM3\PTUDDN\KafkaExample\producer-service
+mvn clean install -DskipTests
+mvn spring-boot:run
+
+Chờ thấy: "Started ProducerServiceApplication"
+
+BƯỚC 4: TEST
+───────────────────────────────────────────────────────────
+curl -X POST http://localhost:8081/api/orders/create ^
+  -H "Content-Type: application/json" ^
+  -d "{\"customerName\":\"Test\",\"productName\":\"Laptop\",\"quantity\":1,\"totalPrice\":1500}"
+
+═══════════════════════════════════════════════════════════
+
+✅ KẾT QUẢ THÀNH CÔNG:
+═══════════════════════════════════════════════════════════
+
+Producer Log:
+  📤 Sending order to Kafka: ORD-XXXXXXXX
+  ✅ Order sent successfully!
+
+Consumer Log:
+  📥 RECEIVED ORDER FROM KAFKA CLUSTER
+  🔹 Customer: Test
+  🔹 Product: Laptop
+  ✅ Order processed successfully
+
+KHÔNG CÒN:
+  ❌ ClassNotFoundException
+  ❌ RecordDeserializationException
+  ❌ Consumer restart liên tục
+
+═══════════════════════════════════════════════════════════
+
+💡 TẠI SAO PHẢI RESET KAFKA?
+═══════════════════════════════════════════════════════════
+
+Messages cũ có type metadata từ Producer cũ
+→ Consumer mới không đọc được
+→ Phải xóa (`down -v`)
+→ Gửi messages mới (không type metadata)
+→ Consumer đọc OK!
+
+═══════════════════════════════════════════════════════════
+
+📖 ĐỌC THÊM:
+═══════════════════════════════════════════════════════════
+
+FIX-DESERIALIZATION-ERROR.md  - Hướng dẫn chi tiết
+reset-kafka.bat                - Script reset tự động
+FIX-SOURCE-ROOT-WARNING.md     - Sửa cảnh báo "outside source root"
+cleanup-files.bat              - Xóa files cũ ngoài src/
+
+═══════════════════════════════════════════════════════════
+
+⚠️  CẢNH BÁO "OUTSIDE OF SOURCE ROOT"?
+═══════════════════════════════════════════════════════════
+
+Nếu IDE báo: "Java file is located outside of source root"
+
+→ Chạy: cleanup-files.bat
+→ Đọc: FIX-SOURCE-ROOT-WARNING.md
+
+Nguyên nhân: Có files Java nằm ngoài src/main/java/
+Giải pháp: Xóa files cũ, chỉ giữ files trong src/
+
+═══════════════════════════════════════════════════════════
+
+⚠️  LƯU Ý QUAN TRỌNG:
+═══════════════════════════════════════════════════════════
+
+1. PHẢI reset Kafka trước (xóa data cũ)
+2. PHẢI rebuild CẢ 2 services
+3. Test với messages MỚI
+4. Messages cũ đã BỊ XÓA (do `down -v`)
+
+═══════════════════════════════════════════════════════════
+
+🎯 CHECKLIST:
+═══════════════════════════════════════════════════════════
+
+□ Stop Consumer và Producer (Ctrl+C)
+□ Reset Kafka: reset-kafka.bat
+□ Rebuild Consumer
+□ Rebuild Producer
+□ Test gửi order mới
+□ Kiểm tra Consumer nhận được
+□ Không còn lỗi deserialization
+
+═══════════════════════════════════════════════════════════
+
+SAU KHI LÀM 4 BƯỚC TRÊN → HỆ THỐNG HOẠT ĐỘNG HOÀN HẢO! ✅
+
+═══════════════════════════════════════════════════════════
+

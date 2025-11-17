@@ -1,0 +1,59 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   ⚠️  CÓ FILES Ở NGOÀI SOURCE ROOT? ⚠️                  ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+🔴 CẢNH BÁO BẠN THẤY:
+═══════════════════════════════════════════════════════════
+"Java file is located outside of the module source root"
+"Package name does not correspond to file path"
+
+═══════════════════════════════════════════════════════════
+
+🎯 NGUYÊN NHÂN:
+═══════════════════════════════════════════════════════════
+
+Có files/folders đang nằm NGOÀI src/main/java/:
+
+producer-service/
+  ├── config/              ❌ Files cũ ở đây
+  ├── controller/          ❌ Files cũ ở đây
+  ├── model/               ❌ Files cũ ở đây
+  └── src/main/java/...    ✅ Files ĐÚNG ở đây
+
+═══════════════════════════════════════════════════════════
+
+✅ GIẢI PHÁP - 1 LỆNH:
+═══════════════════════════════════════════════════════════
+
+cleanup-files.bat
+
+Hoặc đọc: FIX-SOURCE-ROOT-WARNING.md
+
+═══════════════════════════════════════════════════════════
+
+🚀 SAU KHI CLEANUP:
+═══════════════════════════════════════════════════════════
+
+✅ Không còn cảnh báo
+✅ IDE nhận diện đúng source root
+✅ Maven build bình thường
+✅ Services chạy OK
+
+═══════════════════════════════════════════════════════════
+
+💡 AN TOÀN:
+═══════════════════════════════════════════════════════════
+
+- Files trong src/main/java/ là files CHÍNH ✅
+- Files ngoài src/ chỉ là BẢN SAO cũ ❌
+- Xóa files ngoài src/ KHÔNG ảnh hưởng gì ✅
+- Maven chỉ compile files trong src/ ✅
+
+═══════════════════════════════════════════════════════════
+
+CHẠY NGAY: cleanup-files.bat
+
+═══════════════════════════════════════════════════════════
+
